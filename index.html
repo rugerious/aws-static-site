@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paulo Martinho — Cloud Network Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --bg2: #ede8dc;
+    --ink: #1a1a18;
+    --ink2: #3d3d38;
+    --muted: #888880;
+    --accent: #c84b2f;
+    --accent2: #2d6a9f;
+    --border: #d4cfc4;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+  .page { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+
+  /* HEADER */
+  header { border-bottom: 1px solid var(--border); padding: 24px 0; display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+  nav { display: flex; gap: 28px; }
+  nav a { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  nav a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero { padding: 100px 0 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end; border-bottom: 1px solid var(--border); }
+  .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent2); margin-bottom: 28px; }
+  .hero-tag::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent2); }
+  h1 { font-family: 'Fraunces', serif; font-size: clamp(48px, 6vw, 78px); font-weight: 900; line-height: 0.95; letter-spacing: -0.03em; color: var(--ink); margin-bottom: 32px; }
+  h1 em { font-style: italic; color: var(--accent); }
+  .hero-desc { font-size: 13px; color: var(--ink2); line-height: 1.8; max-width: 420px; margin-bottom: 40px; }
+  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 28px; text-decoration: none; border: 1px solid var(--ink); color: var(--ink); transition: all 0.2s ease; display: inline-block; }
+  .btn:hover { background: var(--ink); color: var(--bg); }
+  .btn-fill { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-fill:hover { background: #a33a20; border-color: #a33a20; color: #fff; }
+
+  /* SIGNAL BARS */
+  .hero-right { display: flex; flex-direction: column; gap: 16px; padding-bottom: 8px; }
+  .signal-bar { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); animation: fadeUp 0.6s ease both; }
+  .signal-bar:nth-child(1) { animation-delay: 0.1s; }
+  .signal-bar:nth-child(2) { animation-delay: 0.2s; }
+  .signal-bar:nth-child(3) { animation-delay: 0.3s; }
+  .signal-bar:nth-child(4) { animation-delay: 0.4s; }
+  .signal-bar:nth-child(5) { animation-delay: 0.5s; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .signal-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); min-width: 40px; }
+  .signal-track { flex: 1; height: 4px; background: var(--border); position: relative; overflow: hidden; }
+  .signal-fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent2); animation: fillBar 1.2s ease both; }
+  .signal-bar:nth-child(1) .signal-fill { animation-delay: 0.3s; }
+  .signal-bar:nth-child(2) .signal-fill { animation-delay: 0.4s; background: var(--accent); }
+  .signal-bar:nth-child(3) .signal-fill { animation-delay: 0.5s; }
+  .signal-bar:nth-child(4) .signal-fill { animation-delay: 0.6s; background: #2d9f6a; }
+  .signal-bar:nth-child(5) .signal-fill { animation-delay: 0.7s; background: var(--accent); }
+  @keyframes fillBar { from { width: 0%; } }
+  .signal-val { font-size: 11px; color: var(--ink2); min-width: 32px; text-align: right; }
+
+  /* SECTIONS */
+  .section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+  .section-header { display: flex; align-items: baseline; gap: 20px; margin-bottom: 52px; }
+  .section-num { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  h2 { font-family: 'Fraunces', serif; font-size: clamp(28px, 4vw, 42px); font-weight: 600; letter-spacing: -0.02em; color: var(--ink); line-height: 1.1; }
+  h2 em { font-style: italic; color: var(--accent); }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+  .about-text p { color: var(--ink2); font-size: 13px; line-height: 1.9; margin-bottom: 16px; }
+  .about-text p:last-child { margin-bottom: 0; }
+  .about-text strong { color: var(--ink); }
+  .stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  .stat-row:first-child { border-top: 1px solid var(--border); }
+  .stat-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .stat-val { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 900; color: var(--ink); letter-spacing: -0.02em; }
+  .stat-val span { font-size: 13px; font-family: 'DM Mono', monospace; font-weight: 400; color: var(--muted); margin-left: 4px; }
+
+  /* SKILLS */
+  .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .skill-card { background: var(--bg); padding: 28px 24px; transition: background 0.2s; }
+  .skill-card:hover { background: var(--bg2); }
+  .skill-icon { font-size: 22px; margin-bottom: 14px; }
+  .skill-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 10px; letter-spacing: -0.01em; }
+  .skill-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tag { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--border); color: var(--muted); background: var(--bg2); }
+  .tag.hl { border-color: var(--accent2); color: var(--accent2); background: rgba(45,106,159,0.06); }
+
+  /* JOURNEY */
+  .journey-item { display: grid; grid-template-columns: 140px 1fr; gap: 32px; padding: 28px 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .journey-item:first-child { border-top: 1px solid var(--border); }
+  .journey-year { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 600; color: var(--accent); display: block; margin-bottom: 4px; }
+  .journey-company { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .journey-role { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; margin-bottom: 8px; }
+  .journey-desc { font-size: 12px; color: var(--muted); line-height: 1.8; max-width: 560px; }
+
+  /* BANNER */
+  .current-banner { background: var(--ink); color: var(--bg); padding: 48px; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; margin: 80px 0; }
+  .current-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #666; margin-bottom: 12px; }
+  .current-title { font-family: 'Fraunces', serif; font-size: clamp(22px, 3vw, 32px); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 12px; }
+  .current-title em { font-style: italic; color: var(--accent); }
+  .current-desc { font-size: 12px; color: #888; line-height: 1.8; max-width: 480px; }
+  .cert-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px; border: 1px solid #333; text-align: center; gap: 6px; flex-shrink: 0; }
+  .cert-badge-icon { font-size: 28px; }
+  .cert-badge-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: #666; line-height: 1.4; }
+
+  /* FOOTER */
+  footer { padding: 48px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .footer-left { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-copy { font-size: 11px; color: var(--muted); width: 100%; }
+
+  @media (max-width: 768px) {
+    .hero, .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero { padding: 60px 0 50px; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .journey-item { grid-template-columns: 1fr; gap: 8px; }
+    .current-banner { grid-template-columns: 1fr; }
+    .cert-badge, nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header>
+    <a href="#" class="logo">Paulo Martinho</a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#journey">Journey</a>
+      <a href="https://www.linkedin.com/in/paulo-martinho-5957ab69/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/rugerious" target="_blank">GitHub</a>
+    </nav>
+  </header>
+</div>
+
+<div class="page">
+  <section class="hero">
+    <div>
+      <div class="hero-tag">Cloud Network Engineer</div>
+      <h1>Signal<br>to <em>Cloud</em></h1>
+      <p class="hero-desc">15+ years designing and operating networks from submarine cables to 5G RAN. Now translating deep telecom expertise into cloud infrastructure — bridging the physical network world with AWS architecture.</p>
+      <div class="hero-cta">
+        <a href="https://www.linkedin.com/in/paulo-martinho-5957ab69/" target="_blank" class="btn btn-fill">Connect on LinkedIn</a>
+        <a href="https://github.com/rugerious" target="_blank" class="btn">View GitHub</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="signal-bar">
+        <span class="signal-label">2G/3G</span>
+        <div class="signal-track"><div class="signal-fill" style="width:100%"></div></div>
+        <span class="signal-val">Expert</span>
+      </div>
+      <div class="signal-bar">
+        <span class="signal-label">4G/5G</span>
+        <div class="signal-track"><div class="signal-fill" style="width:90%"></div></div>
+        <span class="signal-val">Expert</span>
+      </div>
+      <div class="signal-bar">
+        <span class="signal-label">DC Ops</span>
+        <div class="signal-track"><div class="signal-fill" style="width:85%"></div></div>
+        <span class="signal-val">Senior</span>
+      </div>
+      <div class="signal-bar">
+        <span class="signal-label">AWS</span>
+        <div class="signal-track"><div class="signal-fill" style="width:65%"></div></div>
+        <span class="signal-val">Growing</span>
+      </div>
+      <div class="signal-bar">
+        <span class="signal-label">IaC</span>
+        <div class="signal-track"><div class="signal-fill" style="width:50%"></div></div>
+        <span class="signal-val">Active</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="page">
+  <section class="section" id="about">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>The <em>story</em> so far</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I started my career integrating <strong>2G and 3G network elements</strong> at Nokia in Lisbon, learning how networks are built from the ground up — not just operated, but designed and understood at a deep technical level.</p>
+        <p>Over the next 15 years I worked across the full telecom stack — from <strong>submarine cable optical systems</strong> at Alcatel-Lucent in London, to <strong>radio network analysis</strong> at O2/Telefonica, to <strong>5G RAN design and planning</strong> at Nokia, to <strong>data centre build operations</strong> supporting VMO2 and 3UK across the UK.</p>
+        <p>Today I'm making a deliberate move into <strong>cloud network engineering</strong> — bringing everything I know about how real networks work to the infrastructure that powers the next generation of connectivity. Currently pursuing the <strong>AWS Solutions Architect Associate</strong> certification and building real infrastructure projects on AWS.</p>
+      </div>
+      <div>
+        <div class="stat-row"><span class="stat-label">Years in telecom</span><div class="stat-val">15+ <span>yrs</span></div></div>
+        <div class="stat-row"><span class="stat-label">Companies</span><div class="stat-val">5 <span>orgs</span></div></div>
+        <div class="stat-row"><span class="stat-label">Technologies</span><div class="stat-val">2G→5G</div></div>
+        <div class="stat-row"><span class="stat-label">Location</span><div class="stat-val">UK <span>based</span></div></div>
+        <div class="stat-row"><span class="stat-label">Current focus</span><div class="stat-val">AWS <span>SAA-C03</span></div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="page">
+  <section class="section" id="skills">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Skills &amp; <em>capabilities</em></h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-icon">☁️</div>
+        <div class="skill-title">Cloud Infrastructure</div>
+        <p class="skill-desc">Designing and provisioning AWS infrastructure using Infrastructure as Code principles.</p>
+        <div class="skill-tags">
+          <span class="tag hl">S3</span><span class="tag hl">EC2</span><span class="tag hl">VPC</span><span class="tag hl">Route 53</span><span class="tag hl">CloudFormation</span><span class="tag hl">CloudWatch</span><span class="tag hl">IAM</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">📡</div>
+        <div class="skill-title">Network Engineering</div>
+        <p class="skill-desc">Deep expertise in LAN, WAN, WLAN, and radio access network design and operations.</p>
+        <div class="skill-tags">
+          <span class="tag">Cisco IOS</span><span class="tag">VLANs</span><span class="tag">BGP/OSPF</span><span class="tag">DNS</span><span class="tag">5G RAN</span><span class="tag">LTE</span><span class="tag">Fiber Optic</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🏗️</div>
+        <div class="skill-title">Data Centre Ops</div>
+        <p class="skill-desc">Physical and logical DC build, rack & stack, structured cabling, and equipment enabling.</p>
+        <div class="skill-tags">
+          <span class="tag">HP Servers</span><span class="tag">Extreme Networks</span><span class="tag">Ericsson</span><span class="tag">A10</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🔧</div>
+        <div class="skill-title">Infrastructure as Code</div>
+        <p class="skill-desc">Provisioning and version-controlling cloud infrastructure using CloudFormation templates.</p>
+        <div class="skill-tags">
+          <span class="tag hl">CloudFormation</span><span class="tag hl">YAML</span><span class="tag hl">Git</span><span class="tag hl">AWS CLI</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">📊</div>
+        <div class="skill-title">Monitoring & Analysis</div>
+        <p class="skill-desc">Network performance monitoring, KPI analysis, fault diagnosis, and SLA management.</p>
+        <div class="skill-tags">
+          <span class="tag hl">CloudWatch</span><span class="tag">SNS Alarms</span><span class="tag">RCA</span><span class="tag">KPI Analysis</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🔒</div>
+        <div class="skill-title">Security & Access</div>
+        <p class="skill-desc">Applying least privilege IAM principles, MFA, and secure network access controls.</p>
+        <div class="skill-tags">
+          <span class="tag hl">IAM Roles</span><span class="tag hl">MFA</span><span class="tag hl">Least Privilege</span><span class="tag">Security Groups</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="page">
+  <section class="section" id="journey">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Career <em>journey</em></h2>
+    </div>
+    <div>
+      <div class="journey-item">
+        <div><span class="journey-year">2024–Now</span><span class="journey-company">Genesis Technologies</span></div>
+        <div><div class="journey-role">Data Centre & GDC Engineer</div><p class="journey-desc">Rack & stack operations, structured cabling, and equipment enabling for enterprise clients including VMO2 and 3UK. Field network support for LAN/WLAN/WAN across EMEA sites. Supporting 5G RAN deployments and managing SCF data for remote field operations.</p></div>
+      </div>
+      <div class="journey-item">
+        <div><span class="journey-year">2021–2024</span><span class="journey-company">Nokia</span></div>
+        <div><div class="journey-role">Network Design & Planning Engineer</div><p class="journey-desc">Configured and optimised RAN for 5G, 4G, 3G, and 2G. Created and managed Site Configuration Files. Parameter tuning, frequency planning, and continuous KPI-driven performance optimisation.</p></div>
+      </div>
+      <div class="journey-item">
+        <div><span class="journey-year">2018–2019</span><span class="journey-company">Alcatel-Lucent</span></div>
+        <div><div class="journey-role">Network Design Engineer</div><p class="journey-desc">Designed repeaters for submarine cable networks. Inspected optical components and produced optical schematics for complex fiber optic assemblies in London.</p></div>
+      </div>
+      <div class="journey-item">
+        <div><span class="journey-year">2013–2016</span><span class="journey-company">O2 / Telefonica</span></div>
+        <div><div class="journey-role">NMC Radio Analyst</div><p class="journey-desc">Analysed and optimised 2G, 3G, and 4G mobile networks. Diagnosed and resolved network issues in coordination with BT, Vodafone, and third-party partners.</p></div>
+      </div>
+      <div class="journey-item">
+        <div><span class="journey-year">2009–2012</span><span class="journey-company">Nokia</span></div>
+        <div><div class="journey-role">GDC Network Integration Engineer</div><p class="journey-desc">Integrated 2G and 3G network elements. Configured and parameterised equipment, conducted remote functional and performance testing, and supported field technicians and Tier 3 teams.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="page">
+  <div class="current-banner">
+    <div>
+      <div class="current-label">Right now</div>
+      <div class="current-title">Telecom engineer on the road to <em>cloud</em></div>
+      <p class="current-desc">Studying for AWS Solutions Architect Associate (SAA-C03). Building real infrastructure projects on AWS — this website is hosted on S3, with Route 53 DNS, CloudWatch monitoring, and provisioned entirely via CloudFormation. Every project lives on GitHub.</p>
+    </div>
+    <div class="cert-badge">
+      <div class="cert-badge-icon">⚡</div>
+      <div class="cert-badge-label">AWS SAA-C03<br>In Progress</div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <footer>
+    <div class="footer-left">Paulo Rogério Martinho</div>
+    <div class="footer-links">
+      <a href="mailto:paulormartinho@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/paulo-martinho-5957ab69/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/rugerious" target="_blank">GitHub</a>
+    </div>
+    <div class="footer-copy">© 2026 — Cloud Network Engineer · United Kingdom</div>
+  </footer>
+</div>
+
+</body>
+</html>
