@@ -1,0 +1,178 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Static Website Infrastructure - S3 + Route 53 + CloudWatch
+  Author: Paulo Roger
+  Version: 1.0
+
+# ─────────────────────────────────────────────
+# PARAMETERS — values you can override at deploy time
+# ─────────────────────────────────────────────
+Parameters:
+
+  DomainName:
+    Type: String
+    Description: Your registered domain name in Route 53 (e.g. mysite.com)
+    Default: tharoger.com
+
+  ProjectName:
+    Type: String
+    Description: Project name used for resource naming
+    Default: static-website
+
+  AlarmEmail:
+    Type: String
+    Description: Email address to receive CloudWatch alarm notifications
+    Default: your@email.com
+
+# ─────────────────────────────────────────────
+# RESOURCES
+# ─────────────────────────────────────────────
+Resources:
+
+  # ── 1. S3 BUCKET — stores and serves the static website files ─────────────
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${ProjectName}-${AWS::AccountId}"
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # ── 2. BUCKET POLICY — grants public read access to website files ──────────
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebsiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub "${WebsiteBucket.Arn}/*"
+
+  # ── 3. SNS TOPIC — notification endpoint for CloudWatch alarms ────────────
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "${ProjectName}-alerts"
+      Subscription:
+        - Protocol: email
+          Endpoint: !Ref AlarmEmail
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+  # ── 4. CLOUDWATCH ALARM — triggers when S3 returns too many 4xx errors ─────
+  S3ErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${ProjectName}-4xx-errors"
+      AlarmDescription: >
+        Triggers when the S3 bucket returns more than 10 client-side errors
+        in a 5-minute window. Notifies via SNS email subscription.
+      Namespace: AWS/S3
+      MetricName: 4xxErrors
+      Dimensions:
+        - Name: BucketName
+          Value: !Ref WebsiteBucket
+        - Name: FilterId
+          Value: EntireBucket
+      Statistic: Sum
+      Period: 300          # 5 minutes
+      EvaluationPeriods: 1
+      Threshold: 10        # alert if more than 10 errors in the period
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlarmTopic
+      TreatMissingData: notBreaching
+
+  # ── 5. ROUTE 53 HOSTED ZONE — DNS zone for your domain ────────────────────
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
+      HostedZoneConfig:
+        Comment: !Sub "Hosted zone for ${DomainName} - managed by CloudFormation"
+
+  # ── 6. ROUTE 53 RECORD — points your domain to the S3 website bucket ──────
+  WebsiteDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZone
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        DNSName: !Sub "s3-website-${AWS::Region}.amazonaws.com"
+        HostedZoneId: Z3AQBSTGFYJSTF   # S3 website hosted zone ID for us-east-1
+        EvaluateTargetHealth: false
+
+  # ── 7. IAM ROLE — least privilege permissions for deployments ─────────────
+  DeploymentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-deploy-role"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: S3DeployPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:DeleteObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt WebsiteBucket.Arn
+                  - !Sub "${WebsiteBucket.Arn}/*"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+
+# ─────────────────────────────────────────────
+# OUTPUTS — useful information after deployment
+# ─────────────────────────────────────────────
+Outputs:
+
+  WebsiteURL:
+    Description: S3 static website endpoint URL
+    Value: !GetAtt WebsiteBucket.WebsiteURL
+    Export:
+      Name: !Sub "${ProjectName}-WebsiteURL"
+
+  BucketName:
+    Description: Name of the S3 website bucket
+    Value: !Ref WebsiteBucket
+    Export:
+      Name: !Sub "${ProjectName}-BucketName"
+
+  HostedZoneId:
+    Description: Route 53 Hosted Zone ID
+    Value: !Ref HostedZone
+    Export:
+      Name: !Sub "${ProjectName}-HostedZoneId"
+
+  AlarmTopicARN:
+    Description: SNS Topic ARN for CloudWatch alarm notifications
+    Value: !Ref AlarmTopic
+    Export:
+      Name: !Sub "${ProjectName}-AlarmTopicARN"
